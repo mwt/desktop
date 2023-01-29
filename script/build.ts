@@ -4,12 +4,7 @@
 import * as path from 'path'
 import * as cp from 'child_process'
 import * as os from 'os'
-import packager, {
-  OfficialArch,
-  OsxNotarizeOptions,
-  OsxSignOptions,
-  Options,
-} from 'electron-packager'
+import packager, { OfficialArch, Options } from 'electron-packager'
 import frontMatter from 'front-matter'
 import { externals } from '../app/webpack.common'
 
@@ -60,9 +55,6 @@ const isPublishableBuild = isPublishable()
 const isDevelopmentBuild = getChannel() === 'development'
 
 const projectRoot = path.join(__dirname, '..')
-const entitlementsSuffix = isDevelopmentBuild ? '-dev' : ''
-const entitlementsPath = `${projectRoot}/script/entitlements${entitlementsSuffix}.plist`
-const extendInfoPath = `${projectRoot}/script/info.plist`
 const outRoot = path.join(projectRoot, 'out')
 
 console.log(`Building for ${getChannel()}…`)
@@ -134,9 +126,6 @@ interface IPackageAdditionalOptions {
     readonly name: string
     readonly schemes: ReadonlyArray<string>
   }>
-  readonly osxSign: OsxSignOptions & {
-    readonly hardenedRuntime?: boolean
-  }
 }
 
 function packageApp() {
@@ -170,9 +159,8 @@ function packageApp() {
   }
 
   // get notarization deets, unless we're not going to publish this
-  const notarizationCredentials = isPublishableBuild
-    ? getNotarizationCredentials()
-    : undefined
+  const notarizationCredentials = undefined
+
   if (
     isPublishableBuild &&
     (isCircleCI() || isGitHubActions()) &&
@@ -216,20 +204,6 @@ function packageApp() {
     appBundleId: getBundleID(),
     appCategoryType: 'public.app-category.developer-tools',
     darwinDarkModeSupport: true,
-    osxSign: {
-      hardenedRuntime: true,
-      entitlements: entitlementsPath,
-      'entitlements-inherit': entitlementsPath,
-      type: isPublishableBuild ? 'distribution' : 'development',
-      // For development, we will use '-' as the identifier so that codesign
-      // will sign the app to run locally. We need to disable 'identity-validation'
-      // or otherwise it will replace '-' with one of the regular codesigning
-      // identities in our system.
-      identity: isDevelopmentBuild ? '-' : undefined,
-      'identity-validation': !isDevelopmentBuild,
-      'gatekeeper-assess': !isDevelopmentBuild,
-    },
-    osxNotarize: notarizationCredentials,
     protocols: [
       {
         name: getBundleID(),
@@ -242,7 +216,6 @@ function packageApp() {
         ],
       },
     ],
-    extendInfo: extendInfoPath,
 
     // Windows
     win32metadata: {
@@ -457,16 +430,4 @@ ${licenseText}`
 
   // sweep up the choosealicense directory as the important bits have been bundled in the app
   rmSync(chooseALicense, { recursive: true, force: true })
-}
-
-function getNotarizationCredentials(): OsxNotarizeOptions | undefined {
-  const appleId = process.env.APPLE_ID
-  const appleIdPassword = process.env.APPLE_ID_PASSWORD
-  if (appleId === undefined || appleIdPassword === undefined) {
-    return undefined
-  }
-  return {
-    appleId,
-    appleIdPassword,
-  }
 }
