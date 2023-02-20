@@ -1,0 +1,18 @@
+diff --git a/node_modules/electron-installer-redhat/resources/spec.ejs b/node_modules/electron-installer-redhat/resources/spec.ejs
+index 48f1dfd..f443eb5 100644
+--- a/node_modules/electron-installer-redhat/resources/spec.ejs
++++ b/node_modules/electron-installer-redhat/resources/spec.ejs
+@@ -1,4 +1,5 @@
+ %define _binary_payload w<%= compressionLevel %>.xzdio
++%define _build_id_links none
+ 
+ Name: <%= name %>
+ Version: <%= version %>
+@@ -17,7 +18,6 @@ AutoReqProv: no
+ <% print(productDescription)
+ print('\n\n\n') }
+ 
+-
+ %>%install
+ mkdir -p %{buildroot}/usr/
+ cp <%= process.platform === 'darwin' ? '-R' : '-r' %> usr/* %{buildroot}/usr/
