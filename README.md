@@ -36,17 +36,6 @@ keep it up to date on Debian and RPM-based distributions.
 
 ### Debian/Ubuntu
 
-There are two APT package feeds available, both hosted in the US. You only need
-to add one or the other here, as both of these are generated based on the
-releases from this repository.
-
-#### [@shiftkey](https://github.com/shiftkey) package feed
-
-```sh
-wget -qO - https://apt.packages.shiftkey.dev/gpg.key | gpg --dearmor | sudo tee /usr/share/keyrings/shiftkey-packages.gpg > /dev/null
-sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/shiftkey-packages.gpg] https://apt.packages.shiftkey.dev/ubuntu/ any main" > /etc/apt/sources.list.d/shiftkey-packages.list'
-```
-
 #### [@mwt](https://github.com/mwt) package feed
 
 ```sh
@@ -63,17 +52,6 @@ sudo apt update && sudo apt install github-desktop
 ```
 
 ### Red Hat/CentOS/Fedora
-
-There are two RPM package feeds available, both hosted in the US. You only need
-to add one or the other here, as both of these are generated based on the
-releases from this repository.
-
-#### [@shiftkey](https://github.com/shiftkey) package feed
-
-```sh
-sudo rpm --import https://rpm.packages.shiftkey.dev/gpg.key
-sudo sh -c 'echo -e "[shiftkey-packages]\nname=GitHub Desktop\nbaseurl=https://rpm.packages.shiftkey.dev/rpm/\nenabled=1\ngpgcheck=1\nrepo_gpgcheck=1\ngpgkey=https://rpm.packages.shiftkey.dev/gpg.key" > /etc/yum.repos.d/shiftkey-packages.repo'
-```
 
 #### [@mwt](https://github.com/mwt) package feed
 
@@ -98,17 +76,6 @@ sudo zypper ref && sudo zypper in github-desktop
 ```
 
 #### OpenSUSE
-
-There are two RPM package feeds available, both hosted in the US. You only need
-to add one or the other here, as both of these are generated based on the
-releases from this repository.
-
-#### [@shiftkey](https://github.com/shiftkey) package feed
-
-```sh
-sudo rpm --import https://rpm.packages.shiftkey.dev/gpg.key
-sudo sh -c 'echo -e "[shiftkey-packages]\nname=GitHub Desktop\nbaseurl=https://rpm.packages.shiftkey.dev/rpm/\nenabled=1\ngpgcheck=1\nrepo_gpgcheck=1\ngpgkey=https://rpm.packages.shiftkey.dev/gpg.key" > /etc/zypp/repos.d/shiftkey-packages.repo'
-```
 
 #### [@mwt](https://github.com/mwt) package feed
 
